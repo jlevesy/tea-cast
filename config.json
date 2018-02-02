@@ -1,9 +1,13 @@
 {
   "castAppId": "",
-  "refreshInterval": 10000,
-  "grafana": {
-    "url": "",
-    "login": "",
-    "password": ""
-  }
+  "refreshInterval": 30000,
+  "dashboards": [
+    {
+      "device": "MYCHROMECAST",
+      "type": "grafana",
+      "url": "",
+      "login": "",
+      "password": ""
+    }
+  ]
 }

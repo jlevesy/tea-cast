@@ -5,13 +5,14 @@ const localIp = require('./ip.js');
 
 // getting screenshot of grafana dashboard
 const grafana = require('./grafana');
-setInterval(() => grafana(config.grafana.url, config.grafana.login, config.grafana.password), config.refreshInterval);
+const dashboard = config.dashboards[0];
+setInterval(() => grafana(dashboard.url, dashboard.login, dashboard.password), config.refreshInterval);
 
 // scan TEA devices
 nodecastor.scan()
   .on('online', device => {
     console.log('New device', device.friendlyName);
-    if (device.friendlyName === 'TEA') {
+    if (device.friendlyName === dashboard.device) {
       connect(device);
     }
   })
@@ -24,11 +25,6 @@ function connect(device) {
   device.on('connect', () => {
     device.on('status', status => {
       console.log('Chromecast status updated', util.inspect(status));
-    });
-    device.status((err, s) => {
-      if (!err) {
-        console.log('Chromecast status', util.inspect(s));
-      }
     });
 
     device.application(config.castAppId, (err, app) => {
