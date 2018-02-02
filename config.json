@@ -1,0 +1,9 @@
+{
+  "castAppId": "",
+  "refreshInterval": 10000,
+  "grafana": {
+    "url": "",
+    "login": "",
+    "password": ""
+  }
+}

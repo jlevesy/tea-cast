@@ -1,0 +1,19 @@
+{
+  "name": "tea-cast",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm run server &",
+    "start": "node index.js",
+    "server": "http-server ./screenshots -p 9999"
+  },
+  "author": "Johan Poirier <johan.poirier@gmail.com> (https://twitter.com/johanpoirier)",
+  "license": "ISC",
+  "dependencies": {
+    "http-server": "^0.11.1",
+    "mdns": "^2.3.4",
+    "nodecastor": "^0.1.8",
+    "puppeteer": "^1.0.0"
+  }
+}
