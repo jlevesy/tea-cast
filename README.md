@@ -1,0 +1,3 @@
+# TEA Cast
+
+npm start
