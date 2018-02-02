@@ -13,7 +13,7 @@
   "dependencies": {
     "http-server": "^0.11.1",
     "mdns": "^2.3.4",
-    "nodecastor": "^0.1.8",
+    "nodecastor": "github:possan/nodecastor",
     "puppeteer": "^1.0.0"
   }
 }
