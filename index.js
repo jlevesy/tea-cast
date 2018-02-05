@@ -1,6 +1,6 @@
 const nodecastor = require('nodecastor');
 const util = require('util');
-const config = require(`./config.tea.json`);
+const config = require(`./config.json`);
 const localIp = require('./ip.js');
 
 // getting screenshot of grafana dashboard
@@ -41,11 +41,11 @@ function connect(device, dashboard) {
 }
 
 function teaCast(app, dashboard) {
-  app.join('urn:x-cast:urn:x-cast:com.tea.cast.monitoring', (error, session) => {
+  app.join('urn:x-cast:com.tea.cast.monitoring', (error, session) => {
     if (error) {
       console.log(error);
 
-      app.run('urn:x-cast:urn:x-cast:com.tea.cast.monitoring', (err, newSession) => {
+      app.run('urn:x-cast:com.tea.cast.monitoring', (err, newSession) => {
         if (err) {
           console.log(err);
           return;
