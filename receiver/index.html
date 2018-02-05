@@ -3,6 +3,9 @@
 <head>
   <style type="text/css">
     body {
+      background-color: #000000;
+      color: #dedede;
+      font-family: Verdana, Geneva, sans-serif;
       overflow: hidden;
     }
 
@@ -16,12 +19,10 @@
 
     #home {
       align-items: center;
-      background-color: #000000;
-      color: #dedede;
       display: flex;
+      flex-direction: column;
       font-weight: bold;
-      font-family: Verdana, Geneva, sans-serif;
-      font-size: 4em;
+      font-size: 5em;
       justify-content: center;
     }
 
@@ -29,11 +30,21 @@
       display: none;
       z-index: 2;
     }
+
+    #loader {
+      bottom: 10vh;
+      position: fixed;
+      visibility: hidden;
+      z-index: 10;
+    }
   </style>
   <title>TEA Cast</title>
 </head>
 <body>
-<div class="display" id="home">TEA Cast</div>
+<div class="display" id="home">
+  <span>TEA Cast</span>
+  <img src="loader.svg" id="loader" alt="" />
+</div>
 <img class="display" id="screenshot" src="" />
 
 <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
@@ -52,6 +63,7 @@
     // handler for 'senderconnected' event
     castReceiverManager.onSenderConnected = function (event) {
       console.log('Received Sender Connected event: ' + event.data);
+      document.getElementById('loader').style.visibility = 'visible';
     };
 
     // handler for 'senderdisconnected' event
@@ -70,6 +82,9 @@
       console.log('Message [' + event.senderId + ']: ' + event.data);
 
       const message = JSON.parse(event.data);
+
+      // hide loader
+      document.getElementById('loader').style.visibility = 'hidden';
 
       // display the image from the sender
       loadImage(message.image);
