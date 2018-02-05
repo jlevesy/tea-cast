@@ -1,19 +1,19 @@
 const nodecastor = require('nodecastor');
 const util = require('util');
-const config = require(`./config.json`);
+const config = require(`./config.tea.json`);
 const localIp = require('./ip.js');
 
 // getting screenshot of grafana dashboard
 const grafana = require('./grafana');
-const dashboard = config.dashboards[0];
-setInterval(() => grafana(dashboard.url, dashboard.login, dashboard.password), config.refreshInterval);
+const dashboards = config.dashboards;
 
 // scan TEA devices
 nodecastor.scan()
   .on('online', device => {
     console.log('New device', device.friendlyName);
-    if (device.friendlyName === dashboard.device) {
-      connect(device);
+    const connectedDeviceDashboard = dashboards.filter(dashboard => dashboard.device === device.friendlyName);
+    if (connectedDeviceDashboard.length > 0) {
+      connect(device, connectedDeviceDashboard[0]);
     }
   })
   .on('offline', device => {
@@ -21,7 +21,7 @@ nodecastor.scan()
   })
   .start();
 
-function connect(device) {
+function connect(device, dashboard) {
   device.on('connect', () => {
     device.on('status', status => {
       console.log('Chromecast status updated', util.inspect(status));
@@ -32,13 +32,15 @@ function connect(device) {
         console.log(err);
         return;
       }
+
       console.log('TEA Cast application', app.id);
-      teaCast(app);
+      teaCast(app, dashboard);
+      setInterval(() => grafana(dashboard), config.refreshInterval);
     });
   });
 }
 
-function teaCast(app) {
+function teaCast(app, dashboard) {
   app.join('urn:x-cast:com.google.cast.sample.helloworld', (error, session) => {
     if (error) {
       console.log(error);
@@ -49,24 +51,24 @@ function teaCast(app) {
           return;
         }
         console.log('Got a session', newSession.id);
-        teaSession(newSession);
+        teaSession(newSession, dashboard);
       });
 
       return;
     }
 
     console.log('Joined a session', session.id);
-    teaSession(session);
+    teaSession(session, dashboard);
   });
 }
 
-function teaSession(session) {
+function teaSession(session, dashboard) {
   session.on('message', data => {
     console.log('Got an unexpected message', util.inspect(data));
   });
 
   setTimeout(() => {
-    setInterval(() => sendImage(session, `http://${localIp}:9999/grafana.png`), config.refreshInterval);
+    setInterval(() => sendImage(session, `http://${localIp}:9999/${dashboard.device}.png`), config.refreshInterval);
   }, 5000);
 }
 

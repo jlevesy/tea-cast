@@ -1,22 +1,19 @@
 const puppeteer = require('puppeteer');
 const debug = false;
-const outputPath = 'screenshots/grafana.png';
+const outputPath = 'screenshots/';
 
-async function grafana(url, login, password) {
+async function grafana(config) {
   const browser = await puppeteer.launch({ headless: !debug });
   const page = await browser.newPage();
-  page.setViewport({
-    width: 1280,
-    height: 720
-  });
+  page.setViewport(config.viewport);
 
-  await page.goto(url);
-  await page.type('[name="username"]', login);
-  await page.type('[name="password"]', password);
+  await page.goto(config.url);
+  await page.type('[name="username"]', config.login);
+  await page.type('[name="password"]', config.password);
   await page.click('[type="submit"]');
 
   await page.waitForNavigation({ waitUntil: 'networkidle0' });
-  await page.screenshot({ path: outputPath });
+  await page.screenshot({ path: `${outputPath}/${config.device}.png` });
 
   await browser.close();
 
