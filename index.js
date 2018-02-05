@@ -41,11 +41,11 @@ function connect(device, dashboard) {
 }
 
 function teaCast(app, dashboard) {
-  app.join('urn:x-cast:com.google.cast.sample.helloworld', (error, session) => {
+  app.join('urn:x-cast:urn:x-cast:com.tea.cast.monitoring', (error, session) => {
     if (error) {
       console.log(error);
 
-      app.run('urn:x-cast:com.google.cast.sample.helloworld', (err, newSession) => {
+      app.run('urn:x-cast:urn:x-cast:com.tea.cast.monitoring', (err, newSession) => {
         if (err) {
           console.log(err);
           return;
