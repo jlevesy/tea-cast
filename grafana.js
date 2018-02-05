@@ -13,6 +13,8 @@ async function grafana(config) {
   await page.click('[type="submit"]');
 
   await page.waitForNavigation({ waitUntil: 'networkidle0' });
+  await page.type('body', 'd');
+  await page.type('body', 'k');
   await page.screenshot({ path: `${outputPath}/${config.device}.png` });
 
   await browser.close();
