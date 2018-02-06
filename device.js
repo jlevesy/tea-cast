@@ -9,6 +9,7 @@ class Device {
     this.name = this.config.device;
     this.session = null;
     this.scrapHandler = null;
+    this.live = false;
   }
 
   connect(castAppId, castUrn) {
@@ -16,23 +17,48 @@ class Device {
 
     this.chromecast.on('connect', () => {
       console.log(`[${device.name}] Connected`);
-      this.chromecast.on('status', () => console.log(`[${device.name}] Status updated`));
+      this.chromecast.on('status', status => {
+        //console.log(`[${device.name}] Status updated`, status);
+        const wasLive = device.live;
+        device.updateStatus(castAppId, status);
 
-      launchApp(device, castAppId)
-        .then(app => getSession(app, castUrn))
-        .then(session => {
-          device.session = session;
-          device.scrapData();
-        })
-        .catch(console.log);
+        if (wasLive && !device.live) {
+          console.log(`[${device.name}] TEA Cast is not running`);
+          device.stop();
+        }
+
+        if (chromecastFree(status)) {
+          device.start(castAppId, castUrn);
+        }
+      });
+
+      device.start(castAppId, castUrn);
     });
 
-    this.chromecast.on('disconnect', () => {
-      console.log(`[${device.name}] Disconnected`);
-      if (this.scrapHandler) {
-        clearInterval(this.scrapHandler);
-      }
-    });
+    this.chromecast.on('disconnect', device.stop.bind(this));
+  }
+
+  start(castAppId, castUrn) {
+    const device = this;
+
+    launchApp(device, castAppId)
+      .then(app => getSession(app, castUrn))
+      .then(session => {
+        device.session = session;
+        device.scrapData();
+      })
+      .catch(console.log);
+  }
+
+  updateStatus(castAppId, status) {
+    this.live = teaCastRunning(castAppId, status);
+  }
+
+  stop() {
+    console.log(`[${this.name}] Disconnected`);
+    if (this.scrapHandler) {
+      clearInterval(this.scrapHandler);
+    }
   }
 
   scrapData() {
@@ -59,6 +85,14 @@ class Device {
     console.log(`[${this.name}] Display image ${url}`);
     this.session.send({ image: url });
   }
+}
+
+function teaCastRunning(castAppId, status) {
+  return status.applications && status.applications.some(app => app.appId === castAppId);
+}
+
+function chromecastFree(status) {
+  return status.applications && status.applications.every(app => app.isIdleScreen);
 }
 
 function launchApp(device, castAppId) {
