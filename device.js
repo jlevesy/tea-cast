@@ -23,7 +23,8 @@ class Device {
         .then(session => {
           device.session = session;
           device.scrapData();
-        });
+        })
+        .catch(console.log);
     });
 
     this.chromecast.on('disconnect', () => {
@@ -64,7 +65,6 @@ function launchApp(device, castAppId) {
   return new Promise(function(resolve, reject) {
     device.chromecast.application(castAppId, (err, app) => {
       if (err) {
-        console.log(err);
         reject(err);
         return;
       }
@@ -81,7 +81,6 @@ function getSession(app, castUrn) {
       if (appNotLaunched) {
         app.run(castUrn, (error, newSession) => {
           if (error) {
-            console.log(error);
             reject(error);
             return;
           }
