@@ -1,6 +1,5 @@
 {
   "castAppId": "",
-  "refreshInterval": 30000,
   "dashboards": [
     {
       "device": "MYCHROMECAST",
@@ -12,7 +11,8 @@
         "width": 1280,
         "height": 720,
         "deviceScaleFactor": 1.5
-      }
+      },
+      "refreshInterval": 10000
     }
   ]
 }

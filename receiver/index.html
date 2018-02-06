@@ -95,7 +95,7 @@
 
   function loadImage(url) {
     const screenshot = document.getElementById('screenshot');
-    screenshot.setAttribute('src', `${url}?v=${Date.now()}`);
+    screenshot.setAttribute('src', url);
     screenshot.style.display = 'block';
     window.castReceiverManager.setApplicationState(url);
   }
