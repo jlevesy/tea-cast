@@ -2,6 +2,9 @@ const puppeteer = require('puppeteer');
 const debug = false;
 const outputPath = 'screenshots/';
 
+const localIp = require('./ip.js');
+const serverPath = `http://${localIp}:9999/screenshots`;
+
 async function teaboard(config) {
   const browser = await puppeteer.launch({ headless: !debug });
   const page = await browser.newPage();
@@ -17,7 +20,7 @@ async function teaboard(config) {
 
   await browser.close();
 
-  return outputPath;
+  return `${serverPath}/${config.device}.png`;
 }
 
 module.exports = teaboard;

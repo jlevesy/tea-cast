@@ -1,5 +1,7 @@
 const nodecastor = require('nodecastor');
-const config = require(`./config.tea.json`);
+const express = require('express');
+
+const config = require(`./config.json`);
 const Device = require('./device.js');
 
 const devices = [];
@@ -19,3 +21,20 @@ scanner.on('offline', chromecast => console.log(`Removed chromecast ${chromecast
 
 // scan chromecast devices
 scanner.start();
+
+// admin server
+const app = express();
+app.listen(9999, function () {
+  console.log('Admin server listening on port 9999')
+});
+
+const options = {
+  dotfiles: 'ignore',
+  etag: false,
+  extensions: ['png'],
+  index: false,
+  maxAge: '10s',
+  redirect: false
+};
+
+app.use(express.static('public', options));

@@ -4,14 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prestart": "npm run server &",
-    "start": "node index.js",
-    "server": "http-server ./screenshots -p 9999"
+    "start": "node index.js"
   },
   "author": "Johan Poirier <johan.poirier@gmail.com> (https://twitter.com/johanpoirier)",
   "license": "MIT",
   "dependencies": {
-    "http-server": "^0.11.1",
+    "express": "^4.16.2",
     "mdns": "^2.3.4",
     "nodecastor": "github:possan/nodecastor",
     "puppeteer": "^1.0.0"

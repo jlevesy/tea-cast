@@ -1,9 +1,9 @@
 const puppeteer = require('puppeteer');
 const debug = false;
-const outputPath = 'screenshots/';
+const outputPath = 'public/screenshots/';
 
 const localIp = require('./ip.js');
-const serverPath = `http://${localIp}:9999`;
+const serverPath = `http://${localIp}:9999/screenshots`;
 
 async function grafana(config) {
   const browser = await puppeteer.launch({ headless: !debug });
@@ -22,7 +22,7 @@ async function grafana(config) {
 
   await browser.close();
 
-  return `${serverPath}/${config.device}.png?v=${Date.now()}`;
+  return `${serverPath}/${config.device}.png`;
 }
 
 module.exports = grafana;
