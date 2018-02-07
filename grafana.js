@@ -6,7 +6,7 @@ const localIp = require('./ip.js');
 const serverPath = `http://${localIp}:9999/screenshots`;
 
 async function grafana(config) {
-  const browser = await puppeteer.launch({ headless: !debug });
+  const browser = await puppeteer.launch({ headless: !debug, ignoreHTTPSErrors: true });
   const page = await browser.newPage();
   page.setViewport(config.viewport);
 
