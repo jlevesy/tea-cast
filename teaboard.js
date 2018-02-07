@@ -1,12 +1,14 @@
 const puppeteer = require('puppeteer');
 const debug = false;
-const outputPath = 'screenshots/';
+const outputPath = 'public/screenshots/';
 
 const localIp = require('./ip.js');
 const serverPath = `http://${localIp}:9999/screenshots`;
 
+const TIMEOUT = 120000;
+
 async function teaboard(config) {
-  const browser = await puppeteer.launch({ headless: !debug });
+  const browser = await puppeteer.launch({ headless: !debug, ignoreHTTPSErrors: true });
   const page = await browser.newPage();
   page.setViewport(config.viewport);
 
@@ -15,7 +17,8 @@ async function teaboard(config) {
   await page.type('[name="_password"]', config.password);
   await page.click('[type="submit"]');
 
-  await page.waitFor(10000);
+  await page.waitForNavigation({ waitUntil: 'domcontentloaded', timeout: TIMEOUT });
+  await page.waitForFunction(() => document.querySelectorAll('.loading').length <= 1, { polling: 500, timeout: TIMEOUT });
   await page.screenshot({ path: `${outputPath}/${config.device}.png` });
 
   await browser.close();
