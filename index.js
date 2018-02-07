@@ -13,7 +13,7 @@ scanner.on('online', chromecast => {
   if (connectedChromecastDashboard.length > 0) {
     const device = new Device(chromecast, connectedChromecastDashboard[0]);
     devices.push(device);
-    device.connect(config.castAppId);
+    device.connect(config.castAppId, config.castUrn);
   }
 });
 
