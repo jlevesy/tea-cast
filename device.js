@@ -45,7 +45,7 @@ class Device {
       .then(app => getSession(app, castUrn))
       .then(session => {
         device.session = session;
-        device.scrapData();
+        device.stream();
       })
       .catch(console.log);
   }
@@ -61,29 +61,37 @@ class Device {
     }
   }
 
-  scrapData() {
+  stream() {
     const device = this;
 
-    // program screenshots
-    let scrapper;
-    if (this.config.type === 'grafana') {
-      scrapper = grafana;
-    } else if (this.config.type === 'teaboard') {
-      scrapper = teaboard;
+    const [ displayMethod, id ] = this.config.type.split(':');
+
+    // scrap image and send it
+    if (displayMethod === 'scrapper') {
+      const scrapper = id === 'grafana' ? grafana : teaboard;
+      this.scrapHandler = setInterval(
+        function scrapAndSend() {
+          scrapper(device.config).then(device.displayImage.bind(device));
+          return scrapAndSend;
+        }(),
+        device.config.refreshInterval
+      );
     }
 
-    this.scrapHandler = setInterval(
-      function scrapAndSend() {
-        scrapper(device.config).then(device.displayImage.bind(device));
-        return scrapAndSend;
-      }(),
-      device.config.refreshInterval
-    );
+    // send URL to display in iframe
+    else if (displayMethod === 'iframe') {
+      device.displayUrl(device.config.url);
+    }
   }
 
   displayImage(url) {
     console.log(`[${this.name}] Display image ${url}`);
     this.session.send({ image: url });
+  }
+
+  displayUrl(url) {
+    console.log(`[${this.name}] Display iframe ${url}`);
+    this.session.send({ url });
   }
 }
 

@@ -9,7 +9,12 @@
       overflow: hidden;
     }
 
+    iframe {
+      border: 0;
+    }
+
     .display {
+      display: none;
       height: 100vh;
       left: 0;
       position: fixed;
@@ -27,7 +32,6 @@
     }
 
     #screenshot {
-      display: none;
       z-index: 3;
     }
 
@@ -45,6 +49,7 @@
   <img src="loader.svg" id="loader" alt="" />
 </div>
 <img class="display" id="screenshot" src="" />
+<iframe class="display" id="remote" src=""></iframe>
 
 <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
 <script type="text/javascript">
@@ -86,7 +91,14 @@
       document.getElementById('loader').style.visibility = 'hidden';
 
       // display the image from the sender
-      loadImage(message.image);
+      if (message.image) {
+        loadImage(message.image);
+      }
+
+      // display iframe
+      if (message.url) {
+        loadIframe(message.url);
+      }
     };
     // initialize the CastReceiverManager with an application status message
     window.castReceiverManager.start({ statusText: 'Application is starting', maxInactivity: 3600 });
@@ -96,8 +108,22 @@
   function loadImage(url) {
     const screenshot = document.getElementById('screenshot');
     screenshot.setAttribute('src', url);
+    hideDisplays();
     screenshot.style.display = 'block';
     window.castReceiverManager.setApplicationState(url);
+  }
+
+  function loadIframe(url) {
+    const iframe = document.getElementById('remote');
+    iframe.setAttribute('src', url);
+    hideDisplays();
+    iframe.style.display = 'block';
+    window.castReceiverManager.setApplicationState(url);
+  }
+
+  function hideDisplays() {
+    const displays = document.getElementsByClassName('display');
+    Array.from(displays).forEach(display => display.style.display = 'none');
   }
 </script>
 </body>
