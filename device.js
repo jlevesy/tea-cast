@@ -71,7 +71,9 @@ class Device {
       const scrapper = id === 'grafana' ? grafana : teaboard;
       this.scrapHandler = setInterval(
         function scrapAndSend() {
-          scrapper(device.config).then(device.displayImage.bind(device));
+          scrapper(device.config)
+            .then(device.displayImage.bind(device))
+            .catch(console.log);
           return scrapAndSend;
         }(),
         device.config.refreshInterval

@@ -22,7 +22,7 @@ async function grafana(config) {
 
   await browser.close();
 
-  return `${serverPath}/${config.device}.png`;
+  return `${serverPath}/${config.device}.png?time=${Date.now()}`;
 }
 
 module.exports = grafana;

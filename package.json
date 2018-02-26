@@ -1,7 +1,7 @@
 {
   "name": "tea-cast",
   "version": "0.0.1",
-  "description": "",
+  "description": "Stream content to multiple Chromecast devices from one app",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
