@@ -35,6 +35,11 @@ class Device {
       device.start(castAppId, castUrn);
     });
 
+    this.chromecast.on('error', error => {
+      console.log(`[${device.name}]`, error);
+      device.stop.bind(this);
+    });
+
     this.chromecast.on('disconnect', device.stop.bind(this));
   }
 
@@ -56,6 +61,7 @@ class Device {
 
   stop() {
     console.log(`[${this.name}] Disconnected`);
+    this.chromecast.stop();
     if (this.scrapHandler) {
       clearInterval(this.scrapHandler);
     }

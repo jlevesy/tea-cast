@@ -23,7 +23,7 @@ async function teaboard(config) {
 
   await browser.close();
 
-  return `${serverPath}/${config.device}.png`;
+  return `${serverPath}/${config.device}.png?time=${Date.now()}`;
 }
 
 module.exports = teaboard;
