@@ -94,6 +94,7 @@ class Device {
 
   displayImage(url) {
     console.log(`[${this.name}] Display image ${url}`);
+    this.lastImageUrl = url;
     this.session.send({ image: url });
   }
 

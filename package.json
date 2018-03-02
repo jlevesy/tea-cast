@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.16.2",
+    "express-handlebars": "^3.0.0",
     "mdns": "^2.3.4",
     "nodecastor": "github:possan/nodecastor",
     "puppeteer": "^1.0.0"
