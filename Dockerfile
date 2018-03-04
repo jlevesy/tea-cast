@@ -13,10 +13,6 @@ RUN apt-get update -yqqq && \
 
 FROM node:8-slim AS run
 
-COPY docker/supervisor/* /etc/supervisor/conf.d/
-COPY docker/avahi.sh /usr/local/bin/
-COPY --from=build  /app /app
-
 RUN apt-get update -yqqq && \
   apt-get install -y \
    avahi-daemon \ 
@@ -24,7 +20,10 @@ RUN apt-get update -yqqq && \
    avahi-utils \
    libnss-mdns \
    libavahi-compat-libdnssd-dev \
-   supervisor && \
-  chmod +x /usr/local/bin/avahi.sh
+   supervisor
+
+COPY docker/avahi/avahi-daemon.conf /etc/avahi/avahi-daemon.conf
+COPY docker/supervisor/* /etc/supervisor/conf.d/
+COPY --from=build  /app /app
 
 CMD /usr/bin/supervisord -nc /etc/supervisor/supervisord.conf

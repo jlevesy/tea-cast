@@ -1,7 +1,7 @@
 const os = require('os');
 
 function getServerIp() {
-  if (proccess.env.TEA_CAST_SERVER_IP) {
+  if (process.env.TEA_CAST_SERVER_IP) {
     return proccess.env.TEA_CAST_SERVER_IP;
   }
 
