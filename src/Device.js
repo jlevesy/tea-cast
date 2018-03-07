@@ -1,5 +1,5 @@
-const grafana = require('./grafana');
-const teaboard = require('./teaboard');
+const GrafanaScrapper = require(`${__dirname}/GrafanaScrapper.js`);
+const localIp = require('./ip.js');
 
 class Device {
 
@@ -62,8 +62,8 @@ class Device {
   stop() {
     console.log(`[${this.name}] Disconnected`);
     this.chromecast.stop();
-    if (this.scrapHandler) {
-      clearInterval(this.scrapHandler);
+    if (this.scrapper) {
+      this.scrapper.stop();
     }
   }
 
@@ -74,16 +74,12 @@ class Device {
 
     // scrap image and send it
     if (displayMethod === 'scrapper') {
-      const scrapper = id === 'grafana' ? grafana : teaboard;
-      this.scrapHandler = setInterval(
-        function scrapAndSend() {
-          scrapper(device.config)
-            .then(device.displayImage.bind(device))
-            .catch(console.log);
-          return scrapAndSend;
-        }(),
-        device.config.refreshInterval
-      );
+      if (id === 'grafana') {
+        this.scrapper = new GrafanaScrapper(device.config, `http://${localIp}:9999/screenshots`, device.displayImage.bind(device));
+        this.scrapper.start().catch(console.log);
+      } else {
+        console.log(`Unimplemented ${id} scrapper.`);
+      }
     }
 
     // send URL to display in iframe

@@ -2,8 +2,8 @@ const nodecastor = require('nodecastor');
 const express = require('express');
 const exphbs  = require('express-handlebars');
 
-const config = require(`./config.json`);
-const Device = require('./device.js');
+const config = require(`./config.tea.json`);
+const Device = require('./src/device.js');
 
 const devices = [];
 const scanner = nodecastor.scan();
@@ -30,7 +30,7 @@ app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
 app.listen(9999, function () {
-  console.log('Admin server listening on port 9999')
+  console.log('Server listening on port 9999')
 });
 
 const options = {
@@ -46,4 +46,11 @@ app.use(express.static('public', options));
 
 app.get('/', function (req, res) {
   res.render('index', { devices: devices.map(d => ({ name: d.name, image: d.lastImageUrl })) });
+});
+
+process.on('SIGINT', function() {
+  console.log('Stopping TEA Cast');
+  //scanner.end();
+  device.forEach(device => device.stop());
+  process.exit(0);
 });
