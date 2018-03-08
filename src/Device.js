@@ -1,4 +1,6 @@
 const GrafanaScrapper = require(`${__dirname}/GrafanaScrapper.js`);
+const LockRedisScrapper =  require(`${__dirname}/LockRedisScrapper.js`);
+
 const localIp = require('./ip.js');
 
 class Device {
@@ -76,6 +78,9 @@ class Device {
     if (displayMethod === 'scrapper') {
       if (id === 'grafana') {
         this.scrapper = new GrafanaScrapper(device.config, `http://${localIp}:9999/screenshots`, device.displayImage.bind(device));
+        this.scrapper.start().catch(console.log);
+      } else if (id === 'lockRedis') {
+        this.scrapper = new LockRedisScrapper(device.config, `http://${localIp}:9999/screenshots`, device.displayImage.bind(device));
         this.scrapper.start().catch(console.log);
       } else {
         console.log(`Unimplemented ${id} scrapper.`);
