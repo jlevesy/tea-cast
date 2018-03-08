@@ -2,7 +2,7 @@ const nodecastor = require('nodecastor');
 const express = require('express');
 const exphbs  = require('express-handlebars');
 
-const config = require(`./config.tea.json`);
+const config = require(`./config.json`);
 const Device = require('./src/device.js');
 
 const devices = [];
@@ -51,6 +51,6 @@ app.get('/', function (req, res) {
 process.on('SIGINT', function() {
   console.log('Stopping TEA Cast');
   //scanner.end();
-  device.forEach(device => device.stop());
+  devices.map(device => device.stop());
   process.exit(0);
 });
