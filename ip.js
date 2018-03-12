@@ -2,7 +2,7 @@ const os = require('os');
 
 function getServerIp() {
   if (process.env.TEA_CAST_SERVER_IP) {
-    return proccess.env.TEA_CAST_SERVER_IP;
+    return process.env.TEA_CAST_SERVER_IP;
   }
 
   const en0 = os.networkInterfaces()['en0'];
