@@ -13,13 +13,23 @@ class Scrapper {
   async start() {
     console.log(`Starting to scrap ${this.config.url}`);
 
-    let pptrOptions = { headless: !debug, ignoreHTTPSErrors: true};
+    const browserWSEndpoint = process.env.BROWSER_END_POINT;
+    if (browserWSEndpoint) {
+      console.log(`Connect to browser at ${browserWSEndpoint}`);
+      this.browser = await puppeteer.connect({ browserWSEndpoint });
+    } else {
+      console.log('Spawning new browser');
 
-    if (process.env.DISABLE_PPTR_SANDBOX) {
-      pptrOptions['args'] = ['--no-sandbox', '--disable-setuid-sandbox'];
+      let pptrOptions = { headless: !debug, ignoreHTTPSErrors: true};
+
+      if (process.env.DISABLE_PPTR_SANDBOX) {
+        pptrOptions['args'] = ['--no-sandbox', '--disable-setuid-sandbox'];
+      }
+
+      this.browser = await puppeteer.launch(pptrOptions);
+      process.env.BROWSER_END_POINT = this.browser.wsEndpoint();
     }
 
-    this.browser = await puppeteer.launch(pptrOptions);
     this.page = await this.browser.newPage();
     this.page.setViewport(this.config.viewport);
 

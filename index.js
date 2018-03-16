@@ -1,4 +1,5 @@
 const nodecastor = require('nodecastor');
+const puppeteer = require('puppeteer');
 const express = require('express');
 const exphbs  = require('express-handlebars');
 
@@ -7,6 +8,7 @@ const Device = require('./src/Device.js');
 
 const devices = [];
 const scanner = nodecastor.scan();
+
 
 scanner.on('online', chromecast => {
   console.log(`Detected chromecast ${chromecast.friendlyName}`);
@@ -20,8 +22,22 @@ scanner.on('online', chromecast => {
 
 scanner.on('offline', chromecast => console.log(`Removed chromecast ${chromecast.friendlyName}`));
 
-// scan chromecast devices
-scanner.start();
+
+let pptrOptions = { ignoreHTTPSErrors: true };
+
+if (process.env.DISABLE_PPTR_SANDBOX) {
+  pptrOptions['args'] = ['--no-sandbox', '--disable-setuid-sandbox'];
+}
+
+puppeteer.launch(pptrOptions).then(browser => {
+  const browserEndPoint = browser.wsEndpoint();
+  console.log(browserEndPoint);
+
+  process.env.BROWSER_END_POINT = browserEndPoint;
+
+  // scan chromecast devices
+  scanner.start();
+});
 
 // admin server
 const app = express();
