@@ -10,12 +10,8 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
    python \
    build-essential \
    git \
-   google-chrome-unstable \
-   fonts-ipafont-gothic \
-   fonts-wqy-zenhei \
-   fonts-thai-tlwg \
-   fonts-kacst\
    ttf-freefont \
+   libx11-xcb-dev \
    libxtst6 \
    libnss3 \
    libxss1 \
@@ -27,14 +23,17 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
    avahi-utils \
    libnss-mdns \
    libavahi-compat-libdnssd-dev \
-   supervisor
+   supervisor && \
+  rm -rf /var/lib/apt/lists/*
 
 COPY docker/avahi/avahi-daemon.conf /etc/avahi/avahi-daemon.conf
 COPY docker/supervisor/* /etc/supervisor/conf.d/
 COPY . /app
 WORKDIR /app
-RUN npm install
+
+RUN npm install && rm -rf docker
 
 EXPOSE 5252/udp
+EXPOSE 9999/tcp
 
 CMD /usr/bin/supervisord -nc /etc/supervisor/supervisord.conf
