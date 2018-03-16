@@ -1,12 +1,14 @@
 const nodecastor = require('nodecastor');
+const puppeteer = require('puppeteer');
 const express = require('express');
 const exphbs  = require('express-handlebars');
 
 const config = require(`./config.json`);
-const Device = require('./src/device.js');
+const Device = require('./src/Device.js');
 
 const devices = [];
 const scanner = nodecastor.scan();
+
 
 scanner.on('online', chromecast => {
   console.log(`Detected chromecast ${chromecast.friendlyName}`);
@@ -20,8 +22,15 @@ scanner.on('online', chromecast => {
 
 scanner.on('offline', chromecast => console.log(`Removed chromecast ${chromecast.friendlyName}`));
 
-// scan chromecast devices
-scanner.start();
+puppeteer.launch({ ignoreHTTPSErrors: true }).then(browser => {
+  const browserEndPoint = browser.wsEndpoint();
+  console.log(browserEndPoint);
+
+  process.env.BROWSER_END_POINT = browserEndPoint;
+
+  // scan chromecast devices
+  scanner.start();
+});
 
 // admin server
 const app = express();
