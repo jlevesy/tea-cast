@@ -13,7 +13,13 @@ class Scrapper {
   async start() {
     console.log(`Starting to scrap ${this.config.url}`);
 
-    this.browser = await puppeteer.launch({ headless: !debug, ignoreHTTPSErrors: true });
+    let pptrOptions = { headless: !debug, ignoreHTTPSErrors: true};
+
+    if (process.env.DISABLE_PPTR_SANDBOX) {
+      pptrOptions['args'] = ['--no-sandbox', '--disable-setuid-sandbox'];
+    }
+
+    this.browser = await puppeteer.launch(pptrOptions);
     this.page = await this.browser.newPage();
     this.page.setViewport(this.config.viewport);
 
