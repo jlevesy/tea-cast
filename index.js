@@ -3,7 +3,7 @@ const express = require('express');
 const exphbs  = require('express-handlebars');
 
 const config = require(`./config.json`);
-const Device = require('./src/device.js');
+const Device = require('./src/Device.js');
 
 const devices = [];
 const scanner = nodecastor.scan();
