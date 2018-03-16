@@ -22,8 +22,8 @@ class Scrapper {
 
       let pptrOptions = { headless: !debug, ignoreHTTPSErrors: true};
 
-      if (process.env.DISABLE_PPTR_SANDBOX) {
-        pptrOptions['args'] = ['--no-sandbox', '--disable-setuid-sandbox'];
+      if (process.env.CONTAINER) {
+        pptrOptions['args'] = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'];
       }
 
       this.browser = await puppeteer.launch(pptrOptions);

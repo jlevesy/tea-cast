@@ -33,7 +33,7 @@ WORKDIR /app
 
 RUN npm install && rm -rf docker
 
-ENV DISABLE_PPTR_SANDBOX=1
+ENV CONTAINER=1
 
 EXPOSE 5252/udp
 EXPOSE 9999/tcp

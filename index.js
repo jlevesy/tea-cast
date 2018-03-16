@@ -25,8 +25,8 @@ scanner.on('offline', chromecast => console.log(`Removed chromecast ${chromecast
 
 let pptrOptions = { ignoreHTTPSErrors: true };
 
-if (process.env.DISABLE_PPTR_SANDBOX) {
-  pptrOptions['args'] = ['--no-sandbox', '--disable-setuid-sandbox'];
+if (process.env.CONTAINER) {
+  pptrOptions['args'] = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'];
 }
 
 puppeteer.launch(pptrOptions).then(browser => {
