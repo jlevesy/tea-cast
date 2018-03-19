@@ -39,10 +39,12 @@ class Device {
 
     this.chromecast.on('error', error => {
       console.log(`[${device.name}]`, error);
-      device.stop.bind(this);
     });
 
-    this.chromecast.on('disconnect', device.stop.bind(this));
+    this.chromecast.on('disconnect', () => {
+      device.stop();
+      //device.start(castAppId, castUrn);
+    });
   }
 
   start(castAppId, castUrn) {
@@ -61,12 +63,12 @@ class Device {
     this.live = teaCastRunning(castAppId, status);
   }
 
-  stop() {
-    console.log(`[${this.name}] Disconnected`);
-    this.chromecast.stop();
+  async stop() {
+    console.log(`[${this.name}] Stopped`);
     if (this.scrapper) {
-      this.scrapper.stop();
+      return this.scrapper.stop();
     }
+    return Promise.resolve();
   }
 
   stream() {

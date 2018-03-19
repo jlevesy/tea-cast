@@ -17,7 +17,9 @@ scanner.on('online', chromecast => {
     const device = new Device(chromecast, connectedChromecastDashboard[0]);
     devices.push(device);
     device.connect(config.castAppId, config.castUrn);
+    return;
   }
+  chromecast.stop();
 });
 
 scanner.on('offline', chromecast => console.log(`Removed chromecast ${chromecast.friendlyName}`));
