@@ -49,7 +49,7 @@ class Scrapper {
       clearInterval(this.scrapHandler);
       this.scrapHandler = null;
     }
-    return this.browser.close();
+    return this.page.close();
   }
 }
 
